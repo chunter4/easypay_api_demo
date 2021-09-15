@@ -82,7 +82,7 @@ namespace EasyPay_API.Classes
 
             if (expErrorMsg != "")
             {
-                TestContext.Out.WriteLine("Error returned: " + data.errors.ToString());
+                TestContext.Out.WriteLine("Testname: " + TestContext.CurrentContext.Test.Name + " -> Error data returned: " + data.errors.ToString());
                 string actErrorMsg_clean = Regex.Replace(data.errors.ToString(), @"\t|\n|\r|\s", "");
                 string expErrorMsg_clean = Regex.Replace(expErrorMsg, @"\t|\n|\r|\s", "");
                 StringAssert.Contains(expErrorMsg_clean, actErrorMsg_clean);
