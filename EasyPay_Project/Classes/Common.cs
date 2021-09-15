@@ -88,5 +88,24 @@ namespace EasyPay_API.Classes
                 StringAssert.Contains(expErrorMsg_clean, actErrorMsg_clean);
             }
         }
+
+        public void deleteAPI(string resource, string item_id, HttpStatusCode expReturnCode)
+        {
+            //get an authenticated rest client
+            RestClient client = getAuthClient();
+
+            //create the request with the resource point
+            RestRequest request = new RestRequest(resource + "/{id}");
+            request.AddHeader("Accept", "*/*");
+
+            //add the item id to delete
+            request.AddParameter("id", item_id);
+
+            //execute the request
+            var response = client.Delete(request);
+
+            //verify return code
+            Assert.That(response.StatusCode, Is.EqualTo(expReturnCode));
+        }
     }
 }
