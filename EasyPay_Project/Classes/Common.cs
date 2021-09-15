@@ -1,14 +1,13 @@
-﻿using NUnit.Framework;
-using RestSharp;
+﻿using RestSharp;
 using RestSharp.Authenticators;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using NUnit.Framework;
 
-namespace EasyPay_Project
+namespace EasyPay_API.Classes
 {
-    [TestFixture]
-    public class EasyPay_API
+    public class Common
     {
         public string baseUrl = "https://code-api-staging.easypayfinance.com";
         public string username = "user";
@@ -80,7 +79,7 @@ namespace EasyPay_Project
             //if expected error message is supplied, verify it
             var responseJson = response.Content;
             dynamic data = JObject.Parse(responseJson);
-            
+
             if (expErrorMsg != "")
             {
                 TestContext.Out.WriteLine("Error returned: " + data.errors.ToString());
@@ -88,23 +87,6 @@ namespace EasyPay_Project
                 string expErrorMsg_clean = Regex.Replace(expErrorMsg, @"\t|\n|\r|\s", "");
                 StringAssert.Contains(expErrorMsg_clean, actErrorMsg_clean);
             }
-        }
-
-        [TestCase("/api/Application/all", HttpStatusCode.OK)]
-        public void Get_Application_All(string resource, HttpStatusCode expReturnCode)
-        {
-            getAPI(resource, expReturnCode);
-        }
-
-        [TestCase("/api/Application", "{ \"applicationId\": 123, \"name\": \"test\", \"age\": \"18\", \"amount\": 18.0 }", HttpStatusCode.OK, "")]
-        [TestCase("/api/Application", "{ \"applicationId\": 123, \"name\": \"test\", \"age\": \"17\", \"amount\": 18.0 }", HttpStatusCode.BadRequest, "The field Age must be between 18 and 30.")]
-        [TestCase("/api/Application", "{ \"applicationId\": 123, \"name\": \"test\", \"age\": \"31\", \"amount\": 18.0 }", HttpStatusCode.BadRequest, "The field Age must be between 18 and 30.")]
-        [TestCase("/api/Application", "{ \"applicationId\": 123, \"name\": \"test\", \"age\": \"18\", \"amount\": \"test\" }", HttpStatusCode.BadRequest, "The JSON value could not be converted to System.Decimal. Path: $.amount")]
-        [TestCase("/api/Application", "{ \"applicationId\": 123, \"name\": 123, \"age\": \"18\", \"amount\": 18.0 }", HttpStatusCode.BadRequest, "The JSON value could not be converted to System.String. Path: $.name")]
-        [TestCase("/api/Application", "{ \"applicationId\": 123, \"name\": \"test\", \"age\": 18, \"amount\": 18.0 }", HttpStatusCode.BadRequest, "The JSON value could not be converted to System.String. Path: $.age")]
-        public void Post_Application(string resource, string body, HttpStatusCode expReturnCode, string expErrorMsg)
-        {
-            postAPI(resource, body, expReturnCode, expErrorMsg);
         }
     }
 }
