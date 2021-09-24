@@ -17,20 +17,26 @@ namespace EasyPay_API.Classes
         {
             //create new rest client instance
             RestClient client = new RestClient(baseUrl);
+
             //create new rest request instance
             RestRequest request = new RestRequest("/api/Authentication/login");
+            
             //accept all headers
             request.AddHeader("Accept", "*/*");
+            
             //set expected content type returned
             request.AddHeader("Content-Type", "application/json");
+            
             //create the post request json body
             object jsonData = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+            
             //add the post body
             request.AddParameter("text/json", jsonData, ParameterType.RequestBody);
             request.AddParameter("grant_type", "client_credentials");
 
             //send the request
             var response = client.Post(request);
+
             //parse the content for the token to create the bearer token
             var responseJson = response.Content;
             dynamic data = JObject.Parse(responseJson);
